@@ -1,11 +1,17 @@
-.container{
-    display: flex;
-    gap: 10px;
+
+
+#booklist{
+background-color: black;
+color: aliceblue;
 }
-.flex-item{
-    flex: 1;
-    flex-wrap: wrap;
+
+#booktitle{
+    color: green;
+    text-decoration: underline;
 }
-h1,h2{
-    padding: 10px;
+#mainPageHead{
+    color: green;
+}
+#subHead{
+    color: green;
 }
