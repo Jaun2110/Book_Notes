@@ -42,17 +42,28 @@ let books = (await db.query("select * from booklist")).rows;
 const bookCoverPromises = books.map(book => fetchCover(book.id))
 const coverURLs = await Promise.all(bookCoverPromises)
 
+// convert the date read
+const dateReadPromises = books.map(book => convertDateRead(book.date_read))
+const datesRead = await Promise.all(dateReadPromises)
+
 console.log (books)
     
     res.render('index',{
         bookList:books,
-        coverURLs: coverURLs
+        coverURLs: coverURLs,
+        dateRead:datesRead
     })
 })
 
+async function convertDateRead(date){
+    const dateConverted = date.toLocaleDateSting() 
+    return dateConverted
+
+}
+
 async function fetchCover(bookId){
    
-    let result = (await db.query("select * from booklist where id = $1",[bookId])).rows[0]
+    let result = (await db.query("select coverurl,isbn,imgsize from booklist where id = $1",[bookId])).rows[0]
     const completeURL = result.coverurl + result.isbn + result.imgsize
         // make req to fetch cover
         try {
