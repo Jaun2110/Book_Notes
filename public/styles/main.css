@@ -15,3 +15,6 @@ color: aliceblue;
 #subHead{
     color: green;
 }
+#col{
+    float: left;
+}

@@ -30,47 +30,56 @@ db.connect((err)=>{
 // set viewengine
 app.set('view engine','ejs')
 
-async function fetchBookCover(){
-    const result = await db.query("select * from bookList" )
-    const isbn = result.rows[0].isbn
-    const url = result.rows[0].coverurl
-    const imageSize = result.rows[0].imgsize
-    const completeURL = url + isbn + imageSize
-    const bookData = result.rows[0]
 
 
-    // make req to fetch cover
-    try {
-        const response = await axios.get(completeURL,{responseType:'stream'})
-        console.log(response)
-        if (response.status === 200){
-            return [bookData,completeURL]
-        }else{
-                return null
-            }
-        
-    } catch (error) {
-        console.error('Error fetching cover',error.message)
-    }
-}
+
 
 
 app.get("/",async(req,res)=>{
-   const bookArray =await fetchBookCover()
-   const coverURL = await bookArray[1]
-   const bookData = bookArray[0]
+    let bookCoverArray =[]
+let books = (await db.query("select * from booklist")).rows;
 
-console.log(bookData)
+books.forEach(book  =>{
+    (async () =>{
+    let bookCoverUrl = await fetchCover(book.id)
+   
+    bookCoverArray.push(bookCoverUrl)
     
-    res.render('index',{coverURL,bookData})
+    })
+} )
+
+console.log (books)
+    
+    res.render('index',{
+        bookList:books,
+        coverURLs: bookCoverArray
+    })
 })
 
+async function fetchCover(bookId){
+   
+    let result = (await db.query("select * from booklist where id = $1",[bookId])).rows
+    const completeURL = result.coverurl + result.isbn + result.imgsize
+        // make req to fetch cover
+        try {
 
-app.post("/books/:isbn",(req,res) =>{
-    const isbn = req.body.isbn
+            const response = await axios.get(completeURL,{responseType:'stream'})
+            console.log(response)
+            if (response.status === 200){
+                return completeURL
+            }else{
+                    return null
+                }
+            
+        } catch (error) {
+            console.error('Error fetching cover',error.message)
+        }
+    }
     
-console.log(req.body.isbn)
-})
+
+
+
+
 
 
 
