@@ -36,29 +36,23 @@ app.set('view engine','ejs')
 
 
 app.get("/",async(req,res)=>{
-    let bookCoverArray =[]
+  
 let books = (await db.query("select * from booklist")).rows;
 
-books.forEach(book  =>{
-    (async () =>{
-    let bookCoverUrl = await fetchCover(book.id)
-   
-    bookCoverArray.push(bookCoverUrl)
-    
-    })
-} )
+const bookCoverPromises = books.map(book => fetchCover(book.id))
+const coverURLs = await Promise.all(bookCoverPromises)
 
 console.log (books)
     
     res.render('index',{
         bookList:books,
-        coverURLs: bookCoverArray
+        coverURLs: coverURLs
     })
 })
 
 async function fetchCover(bookId){
    
-    let result = (await db.query("select * from booklist where id = $1",[bookId])).rows
+    let result = (await db.query("select * from booklist where id = $1",[bookId])).rows[0]
     const completeURL = result.coverurl + result.isbn + result.imgsize
         // make req to fetch cover
         try {

@@ -24,9 +24,9 @@
         <!-- img of book with title and description -->
         <div class="row">
             <div class="col-md-4 sm-6 lg-3" id="bookCover">
-                <img class="bookImg" src="" alt="">
+                <img class="bookImg" src="<%= coverURLs[book.id-1] %>" alt="">
             </div>
-            <div class="col-md-8 sm-6 lg-9" id="bookData">
+            <div class="col-md-6 sm-6 lg-9" id="bookData">
                 <h3 id="booktitle" ><%=book.title %></h3>
                 <p class="small">Date Read:<span id="rating"> Recommendation: \10</span></p>
                 <p>
