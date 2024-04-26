@@ -5,29 +5,29 @@ import axios from "axios";
 
 const app = express()
 const port = 4000
-const API_URL = "http://localhost:4000";
+const API_URL = "http://localhost:5000";
 
 // middelwares
 app.use(bodyParser.urlencoded({extended:true}))
 // point to static files
 app.use(express.static("public"))
 
-// db connection
-const db = new pg.Client({
-    user:"postgres",
-    password:"admin",
-    host: "localhost",
-    database: "books",
-    port: 5432,
-})
+// // db connection
+// const db = new pg.Client({
+//     user:"postgres",
+//     password:"admin",
+//     host: "localhost",
+//     database: "books",
+//     port: 5432,
+// })
 
-db.connect((err)=>{
-    if (err){
-        console.error(err.message)
-    }else{
-        console.log(`Connection to database ${db.database} successfull` )
-    }
-})
+// db.connect((err)=>{
+//     if (err){
+//         console.error(err.message)
+//     }else{
+//         console.log(`Connection to database ${db.database} successfull` )
+//     }
+// })
 // set viewengine
 app.set('view engine','ejs')
 
@@ -37,27 +37,58 @@ app.set('view engine','ejs')
 
 
 app.get("/",async(req,res)=>{
-  
-let books = (await db.query("select * from booklist")).rows;
+  try {
+    const response = await axios.get(`${API_URL}/getbooks`)
+const books = response.data[0]
+const coverURLs = response.data[1]
+const datesRead = response.data[2]
 
-const bookCoverPromises = books.map(book => fetchCover(book.id))
-const coverURLs = await Promise.all(bookCoverPromises)
+res.render("index",{
+    bookList:books,
+    coverURLs,coverURLs,
+    dateRead:datesRead
+})
 
-// convert the date read
-const dateReadPromises = books.map(book => convertDateRead(book.date_read))
-const datesRead = await Promise.all(dateReadPromises)
-
-// console.log (books)
     
-    res.render('index',{
-        bookList:books,
-        coverURLs: coverURLs,
-        dateRead:datesRead
-    })
+  } catch (error) {
+    console.log(error.message)
+    
+  }
+
+
+
+
+
+
+
+
+
+// let books = (await db.query("select * from booklist")).rows;
+
+// const bookCoverPromises = books.map(book => fetchCover(book.id))
+// const coverURLs = await Promise.all(bookCoverPromises)
+
+// // convert the date read
+// const dateReadPromises = books.map(book => convertDateRead(book.date_read))
+// const datesRead = await Promise.all(dateReadPromises)
+
+// // console.log (books)
+    
+//     res.render('index',{
+//         bookList:books,
+//         coverURLs: coverURLs,
+//         dateRead:datesRead
+//     })
 })
 app.get("/new",(req,res)=>{
     res.render("new")
 })
+app.post("/newBook",async (req,res)=>{
+    const response = await axios.post(`${API_URL}/addBook`,req.body) 
+    console.log(response)
+})
+
+
 
 async function convertDateRead(date){
     const dateConverted = date.toLocaleDateString() 

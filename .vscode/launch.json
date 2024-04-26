@@ -7,11 +7,26 @@
         {
             "type": "node",
             "request": "launch",
-            "name": "notes",
+            "name": "API_server",
             "skipFiles": [
                 "<node_internals>/**"
             ],
-            "program": "${workspaceFolder}\\index.js"
+            "program": "${workspaceFolder}\\API.js"
+        },
+        {
+            "type": "node",
+            "request": "launch",
+            "name": "API_requester",
+            "skipFiles": [
+                "<node_internals>/**"
+            ],
+            "program": "${workspaceFolder}\\server.js"
+        }
+    ],
+    "compounds": [
+        {
+            "name": "Compound Launch",
+            "configurations": ["API_server","API_requester"]
         }
     ]
 }

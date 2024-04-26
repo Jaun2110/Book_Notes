@@ -29,7 +29,7 @@ db.connect((err)=>{
     }
 })
 
-app.get("/",async(req,res)=>{
+app.get("/getbooks",async(req,res)=>{
   
 let books = (await db.query("select * from booklist")).rows;
 
@@ -42,14 +42,37 @@ const datesRead = await Promise.all(dateReadPromises)
 
 // console.log (books)
     
-    res.render('index',{
-        bookList:books,
-        coverURLs: coverURLs,
-        dateRead:datesRead
+    
+        res.json([books,coverURLs,datesRead])
+        
     })
-})
+
 app.get("/new",(req,res)=>{
     res.render("new")
+})
+
+app.post("/addBook",async(req,res)=>{
+    let title = req.body.title;
+    let isbn = req.body.isbn;
+    let author = req.body.author;
+    let dateRead = req.body.dateRead;
+    console.log(typeof(dateRead))
+    let rating = req.body.rating;
+    let summary = req.body.summary;
+    let query = "insert into booklist (title,isbn, author, date_read, rating, summary ) values($1,$2,$3,TO_Date($4,'YYYY-MM-DD'),$5,'$6')";
+    try {
+        await db.query
+        (query
+        ,[title,isbn,author,dateRead,rating,summary])
+
+        res.json("insertion done")
+    } catch (error) {
+        console.log("error inserting into database",error.message)
+        
+    }
+  
+
+
 })
 
 async function convertDateRead(date){
