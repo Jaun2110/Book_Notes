@@ -46,7 +46,7 @@ const coverURLs = await Promise.all(bookCoverPromises)
 const dateReadPromises = books.map(book => convertDateRead(book.date_read))
 const datesRead = await Promise.all(dateReadPromises)
 
-console.log (books)
+// console.log (books)
     
     res.render('index',{
         bookList:books,
@@ -56,7 +56,7 @@ console.log (books)
 })
 
 async function convertDateRead(date){
-    const dateConverted = date.toLocaleDateSting() 
+    const dateConverted = date.toLocaleDateString() 
     return dateConverted
 
 }

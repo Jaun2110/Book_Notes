@@ -10,6 +10,7 @@
     </head>
 <body id="booklist">
     <div class="container">
+       
 
         <div class="heading text-left  mx-4 my-4 " >
             <h1 id = "mainPageHead">Jaun Nothnagel</h1>
@@ -20,6 +21,8 @@
             </p>
         </div>
         <hr>
+        <a href="/new" class="btn btn-success">Add another book</a>
+
 <%bookList.forEach(book =>{%>
         <!-- img of book with title and description -->
         <div class="row">
@@ -28,7 +31,7 @@
             </div>
             <div class="col-md-6 sm-6 lg-9" id="bookData">
                 <h3 id="booktitle" ><%=book.title %></h3>
-                <p class="small">Date Read: <%= dateRead %><span id="rating"> Recommendation: <%= book.rating %>\10</span></p>
+                <p class="small">Date Read: <%= dateRead[book.id-1] %><span id="rating"> Recommendation: <%= book.rating %>\10</span></p>
                 <p>
                     <%= book.summary%>
                   
