@@ -8,6 +8,7 @@ const port = 5000
 
 // middelwares
 app.use(bodyParser.urlencoded({extended:true}))
+app.use(bodyParser.json())
 // point to static files
 app.use(express.static("public"))
 
@@ -27,13 +28,6 @@ db.connect((err)=>{
         console.log(`Connection to database ${db.database} successfull` )
     }
 })
-// set viewengine
-app.set('view engine','ejs')
-
-
-
-
-
 
 app.get("/",async(req,res)=>{
   
@@ -53,6 +47,9 @@ const datesRead = await Promise.all(dateReadPromises)
         coverURLs: coverURLs,
         dateRead:datesRead
     })
+})
+app.get("/new",(req,res)=>{
+    res.render("new")
 })
 
 async function convertDateRead(date){
@@ -96,5 +93,5 @@ async function fetchCover(bookId){
 
 
 app.listen(port,()=>{
-console.log(`Server started on http://localhost:${port}`)
+console.log(`API running on http://localhost:${port}`)
 })
