@@ -56,10 +56,38 @@ app.post("/addBook",async(req,res)=>{
     let isbn = req.body.isbn;
     let author = req.body.author;
     let dateRead = req.body.dateRead;
-    console.log(typeof(dateRead))
+
+const dateOBj = new Date(dateRead);
+
+
+    console.log(dateOBj);
     let rating = req.body.rating;
     let summary = req.body.summary;
-    let query = "insert into booklist (title,isbn, author, date_read, rating, summary ) values($1,$2,$3,TO_Date($4,'YYYY-MM-DD'),$5,'$6')";
+
+    // reset id field in booklist db
+    const script =`
+    DO $$
+    DECLARE newVal INT;
+    BEGIN
+    -- get count of existing records and add 1
+
+        select count(id) + 1 into newVal from booklist;
+
+        EXECUTE 'ALTER SEQUENCE booklist_id_seq RESTART WITH ' || newVal;
+
+    END $$;
+    `;
+    // executing script
+    try {
+        await db.query(script)
+        
+    } catch (error) {
+        console.error("Failed to reset id sequence,",error.message)
+        
+    }
+
+    // ---------------------------------
+    let query = "insert into booklist (title,isbn, author, date_read, rating, summary ) values($1,$2,$3,$4,$5,$6)";
     try {
         await db.query
         (query

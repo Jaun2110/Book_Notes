@@ -12,22 +12,7 @@ app.use(bodyParser.urlencoded({extended:true}))
 // point to static files
 app.use(express.static("public"))
 
-// // db connection
-// const db = new pg.Client({
-//     user:"postgres",
-//     password:"admin",
-//     host: "localhost",
-//     database: "books",
-//     port: 5432,
-// })
 
-// db.connect((err)=>{
-//     if (err){
-//         console.error(err.message)
-//     }else{
-//         console.log(`Connection to database ${db.database} successfull` )
-//     }
-// })
 // set viewengine
 app.set('view engine','ejs')
 
@@ -55,37 +40,18 @@ res.render("index",{
     
   }
 
-
-
-
-
-
-
-
-
-// let books = (await db.query("select * from booklist")).rows;
-
-// const bookCoverPromises = books.map(book => fetchCover(book.id))
-// const coverURLs = await Promise.all(bookCoverPromises)
-
-// // convert the date read
-// const dateReadPromises = books.map(book => convertDateRead(book.date_read))
-// const datesRead = await Promise.all(dateReadPromises)
-
-// // console.log (books)
-    
-//     res.render('index',{
-//         bookList:books,
-//         coverURLs: coverURLs,
-//         dateRead:datesRead
-//     })
 })
+
+// return the new book page
 app.get("/new",(req,res)=>{
     res.render("new")
 })
+
+// triggered when form submitted
 app.post("/newBook",async (req,res)=>{
-    const response = await axios.post(`${API_URL}/addBook`,req.body) 
-    console.log(response)
+    const response = await axios.post(`${API_URL}/addBook`,req.body) ;
+    console.log(response.data);
+    res.redirect("/");
 })
 
 
