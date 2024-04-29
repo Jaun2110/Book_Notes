@@ -39,10 +39,6 @@ const coverURLs = await Promise.all(bookCoverPromises)
 // convert the date read
 const dateReadPromises = books.map(book => convertDateRead(book.date_read))
 const datesRead = await Promise.all(dateReadPromises)
-
-// console.log (books)
-    
-    
         res.json([books,coverURLs,datesRead])
         
     })
@@ -56,11 +52,6 @@ app.post("/addBook",async(req,res)=>{
     let isbn = req.body.isbn;
     let author = req.body.author;
     let dateRead = req.body.dateRead;
-
-const dateOBj = new Date(dateRead);
-
-
-    console.log(dateOBj);
     let rating = req.body.rating;
     let summary = req.body.summary;
 

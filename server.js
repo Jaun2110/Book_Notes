@@ -1,5 +1,4 @@
 import express from "express";
-import pg from "pg";
 import bodyParser from "body-parser";
 import axios from "axios";
 
@@ -18,7 +17,7 @@ app.set('view engine','ejs')
 
 
 
-
+// display all books
 
 
 app.get("/",async(req,res)=>{
@@ -36,10 +35,8 @@ res.render("index",{
 
     
   } catch (error) {
-    console.log(error.message)
-    
+    console.log(error.message)   
   }
-
 })
 
 // return the new book page
@@ -53,6 +50,8 @@ app.post("/newBook",async (req,res)=>{
     console.log(response.data);
     res.redirect("/");
 })
+
+// open view notes page
 
 
 
