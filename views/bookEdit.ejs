@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<%-include("__header.ejs")%>
+<body>
+    <div class="container">
+        <h1>Edit book:</h1>
+        <form action="/editBookSubmit/<%bookData.id%>" method="post">
+            <div class="form-group mt-5">
+                <label for="isbn" class="mb-2">Book Title</label>
+                <input  required type="text" name="title" id="title" class="form-control mb-3"
+                value="<%=bookData.title%>">
+            </div>
+            <div class="form-group ">
+                <label for="isbn" class="mb-2">ISBN(13)</label>
+                <input  required type="text" name="isbn" id="isbn" class="form-control mb-3"
+                value="<%=bookData.isbn%>">
+            </div>
+            <div class="form-group">
+                <label for="Author" class="mb-2">Author</label>
+                <input  required type="text" name="author" id="author" class="form-control mb-3"
+                value="<%=bookData.author%>">
+            </div>
+            <div class="form-group">
+                <label for="Date Read" class="mb-2">Date Read</label>
+                <input  required type="date" name="dateRead" id="dateRead" class="form-control mb-3"
+                value="<%=dateRead%>">
+            </div>
+            <div class="form-group">
+                <label for="rating" class="mb-2">Rating</label>
+                <input  required type="text" name="rating" id="rating" class="form-control mb-3"
+                value="<%=bookData.rating%>">
+            </div>
+          
+            <div class="form-group">
+                <label for="summary" class="mb-2">Summary</label>
+               <textarea required name="summary" id="summary" class="form-control mb-3" ><%=bookData.summary%></textarea>
+            </div>
+            <div class="form-group">
+                <button class="btn btn-success" type="submit">Save</button>
+                <a href="/" class="btn btn-primary">Abort</a>
+                </div>
+
+        </form>
+    </div>
+    
+
+    <%-include("__footer.ejs")%>
+</body>
+</html>

@@ -94,6 +94,50 @@ app.post("/addBook",async(req,res)=>{
 
 })
 
+app.get("/notes/:id",async(req,res)=>{
+    console.log(req.params)
+    const id = req.params.id
+const coverURL = await fetchCover(id)
+const bookData =(await db.query(`select * from booklist where id = ${id}`)).rows[0]
+// const title = bookData.title
+// const isbn = bookData.isbn
+ const dateRead =await convertDateRead(bookData.date_read)
+// const recommendation = bookData.rating
+res.json([coverURL,bookData,dateRead])
+})
+
+app.get("/books/editDetail/:id",async(req,res)=>{
+
+    const id = req.params.id
+    const book =  (await db.query(`select * from booklist where id = ${id}`)).rows[0]
+    const dateRead =await convertDateRead(book.date_read)
+    res.json([book,dateRead])
+})
+
+app.patch("/saveData", async (req,res)=>{
+    const id = req.params.id
+    const book = (await db.query(`select * from booklist where id = ${id}`)).rows[0]
+    const title = req.body.title || book.title
+    const isbn = req.body.isbn || book.isbn
+    const author = req.body.author || book.author
+    const dateReadString =await convertDateRead(book.date_read)
+    const dateRead = req.body.dateRead || dateReadString
+    const rating = req.body.rating || book.rating
+    const summary = req.body.summary || book.summary
+
+    const query = 
+    "update booklist set title = $1, set isbn = $2,set author = $3, set date_read = $4, set rating = $5, set summary = $6" +
+    " where id = $7"
+    try {
+        const insert =await db.query(query,[title,isbn,author,dateRead,rating,summary,id])
+    } catch (error) {
+        console.error(error.message)
+        
+    }
+
+
+})
+
 async function convertDateRead(date){
     const dateConverted = date.toLocaleDateString() 
     return dateConverted

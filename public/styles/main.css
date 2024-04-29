@@ -20,3 +20,37 @@ color: aliceblue;
 .addBookHead{
     color: green;
 }
+figure{
+    float: left;
+}
+footer,hr{clear: both;}
+
+small{
+    font-family: "Noto Serif", serif;
+  font-optical-sizing: auto;
+  font-weight: 400;
+  font-size: large;
+  font-style: normal;
+  font-variation-settings:
+    "wdth" 100;
+    color: darkgray;
+    font-size: 2em;
+}
+
+html{
+    font-family: "Noto Serif", serif;
+  font-optical-sizing: auto;
+  font-size: 20px;
+  font-weight: 400;
+  font-style: normal;
+  font-variation-settings:
+    "wdth" 100;
+}
+h2{
+    clear: left;
+    color: green;
+
+}
+#summary{
+    clear: both;
+}

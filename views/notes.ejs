@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en">
+<%- include("__header.ejs")%>
+<body id="booklist">
+    <div class="container">
+        <div class="heading text-left  mx-4 my-4 " >
+            <h1 id = "mainPageHead">Jaun Nothnagel</h1>
+        </div>
+     <main>
+        
+        <figure>
+            <img class="bookImg mx-4" src="<%=coverUrl%>" alt="">
+        </figure>
+      <h1 id="booktitle" class="mx-4 px-4 py-4">
+        <%=bookData.title %>
+    </h1>
+    <small class="small">
+        ISBN: <%= bookData.isbn %>
+        <br>
+        Date Read: <%= dateRead %>
+        <br>
+        My Recommendation: <%= bookData.rating%> /10
+    </small>
+    <p id="summary" class="mx-4"><%= bookData.summary%></p>
+    <h2 class="mx-4">My Notes:</h2>
+
+     </main>
+
+
+    </div>
+<!-- end of container -->
+    <%- include("__footer.ejs") %>
+</body>
+</html>
