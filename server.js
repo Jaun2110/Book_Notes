@@ -29,7 +29,7 @@ const datesRead = response.data[2]
 
 res.render("index",{
     bookList:books,
-    coverURLs,coverURLs,
+    coverURLs:coverURLs,
     dateRead:datesRead
 })
 
