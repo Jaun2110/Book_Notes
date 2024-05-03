@@ -12,23 +12,82 @@
             <img class="bookImg mx-4" src="<%=coverUrl%>" alt="">
         </figure>
       <h1 id="booktitle" class="mx-4 px-4 py-4">
-        <%=bookData.title %>
+        <%=bookData[0].title %>
     </h1>
     <small class="small">
-        ISBN: <%= bookData.isbn %>
+        ISBN: <%= bookData[0].isbn %>
         <br>
         Date Read: <%= dateRead %>
         <br>
-        My Recommendation: <%= bookData.rating%> /10
+        My Recommendation: <%= bookData[0].rating%> /10
     </small>
-    <p id="summary" class="mx-4"><%= bookData.summary%></p>
+    <p id="summary" class="mx-4"><%= bookData[0].summary%></p>
     <h2 class="mx-4">My Notes:</h2>
+
+
+    <%if (locals.notes) {%>
+        <%   notes.forEach(note => { %>
+      
+            <div class="mx-4">
+                <p class="note">
+                    <section id="noteText" class="py-2" name="noteText">
+                        <%=note.note%>
+                    </section>
+                    
+                    <form action="/editNote/<%= note.noteid %>/<%= bookData[0].id %>" method="post" class="d-inline">
+                        <a class="btn btn-primary" id="noteEditBtn" onclick="editNoteHandler()" ><img src="/svg/edit-content.svg" alt="button with edit icon" class="svg" alt="edit note button"></a>
+                        <textarea name="noteEntry" id="noteEdit" class="form-control mb-3 mx-4" hidden><%= note.note%></textarea>
+               
+                        <button type="submit" class="btn btn-primary mx-4" id="saveNoteEdit"  hidden>Save Note</button>
+                        <a class="btn btn-danger d" hidden id="cancelNoteEdit" onclick="closeNoteHandler()" >Close</a>
+                    </form>
+                    <form action="/deleteNote/<%=note.noteid %>/<%= bookData[0].id %>" method="post" class="d-inline">
+                        <button class="btn btn-danger" id="noteDeleteBtn"><img src="/svg/trash-can.svg" class="svg" alt="delete note button"></button>
+                    </form>
+                   
+                </p>
+            </div>
+        <% }) %>
+        <% } else{%>
+            <div class="note mx-4">
+
+                <form action="/addNote/<%=bookData[0].id%>" method="post">
+                    <textarea name="noteEntry" id="noteEntry" class="form-control mb-3 " hidden></textarea>
+               
+                    <button type="submit" class="btn btn-primary " id="saveNote" name="saveNote" hidden>Save Note</button>
+                    
+                    <a href="/" class="btn btn-primary " id="cancel" >Home</a>
+                    
+                </form>
+                </div>
+    
+<%}%>
+    
+    <div class="note mx-4">
+        
+        
+        <form  action="/addNote/<%=bookData[0].id%>" method="post">
+            
+            <a class="btn btn-success " id="addNote" onclick="addNoteHandler()">Add Note</a> 
+            <a class="btn btn-primary " href="/" id="homeBtn" >Home</a> 
+
+            <textarea name="noteEntry" id="noteEntry" class="form-control mb-3 mx-4" hidden></textarea>
+       
+            <button type="submit" class="btn btn-success mx-4" id="saveNote" name="saveNote"hidden >Save Note</button>
+            <a class="btn btn-danger " id="cancelNoteAdd" onclick="closeNoteHandlerAdd()" hidden>Close</a>
+    
+        </form>
+        
+    </div>
+    
+    
+
 
      </main>
 
 
-    </div>
+    
 <!-- end of container -->
     <%- include("__footer.ejs") %>
-</body>
-</html>
+
+    

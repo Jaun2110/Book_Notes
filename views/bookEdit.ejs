@@ -1,11 +1,15 @@
 <!DOCTYPE html>
 <html lang="en">
 <%-include("__header.ejs")%>
-<body>
-    <div class="container">
-        <h1>Edit book:</h1>
-        <form action="/editBookSubmit/<%bookData.id%>" method="post">
-            <div class="form-group mt-5">
+<body id="booklist">
+    <div class="container ">
+        <div class="addBookHead text-left my-4">
+            <h1>Edit book:</h1>
+        </div>
+
+        
+        <form action="/editBookSubmit/<%=bookData.id%>" method="post">
+            <div class="form-group ">
                 <label for="isbn" class="mb-2">Book Title</label>
                 <input  required type="text" name="title" id="title" class="form-control mb-3"
                 value="<%=bookData.title%>">
@@ -45,5 +49,3 @@
     
 
     <%-include("__footer.ejs")%>
-</body>
-</html>

@@ -1,3 +1,7 @@
+
+
+
+
 <hr>
 
 
@@ -5,3 +9,50 @@
             
             Nothnagel Tech Solutions @ 2024</footer>
     </div>
+    <script>
+       
+            function addNoteHandler(){
+            
+                $("#addNote").attr("hidden",true)
+                $("#homeBtn").attr("hidden",true)
+               $("#noteEntry").removeAttr("hidden")
+               $("#saveNote").removeAttr("hidden")
+               $("#cancelNoteAdd").removeAttr("hidden")
+        }
+            function closeNoteHandler(){
+                $("#noteEditBtn").removeAttr("hidden")
+                $("#noteDeleteBtn").removeAttr("hidden")
+                $("#addNote").removeAttr("hidden")
+                $("#noteEdit").attr("hidden",true)
+                $("#saveNoteEdit").attr("hidden",true)
+                $("#cancelNoteEdit").attr("hidden",true)
+                $("#noteText").removeAttr("hidden")
+
+           
+        }
+            function editNoteHandler(){
+                $("#noteEditBtn").attr("hidden",true)
+                $("#noteDeleteBtn").attr("hidden",true)
+                $("#addNote").attr("hidden",true)
+                $("#noteEdit").removeAttr("hidden")
+                $("#saveNoteEdit").removeAttr("hidden")
+                $("#cancelNoteEdit").removeAttr("hidden")
+                $("#noteText").attr("hidden",true)
+
+
+
+        }
+        function closeNoteHandlerAdd(){
+            $("#addNote").removeAttr("hidden")
+            $("#homeBtn").removeAttr("hidden")
+               $("#noteEntry").attr("hidden",true)
+               $("#saveNote").attr("hidden",true)
+               $("#cancelNoteAdd").attr("hidden",true)
+
+        }
+        
+        
+        
+    </script>
+</body>
+</html>

@@ -54,3 +54,14 @@ h2{
 #summary{
     clear: both;
 }
+.svg{
+   
+    height: 20px;
+    width: 20px;
+  
+}
+.svg-btn{
+    background: url("/svg/trash-can.svg");
+    background-size: contain;
+    color: transparent;
+}

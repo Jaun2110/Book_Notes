@@ -31,7 +31,7 @@ db.connect((err)=>{
 
 app.get("/getbooks",async(req,res)=>{
   
-let books = (await db.query("select * from booklist")).rows;
+let books = (await db.query("select * from booklist order by id ASC")).rows;
 
 const bookCoverPromises = books.map(book => fetchCover(book.id))
 const coverURLs = await Promise.all(bookCoverPromises)
@@ -95,15 +95,16 @@ app.post("/addBook",async(req,res)=>{
 })
 
 app.get("/notes/:id",async(req,res)=>{
-    console.log(req.params)
+    // console.log(req.params)
     const id = req.params.id
 const coverURL = await fetchCover(id)
-const bookData =(await db.query(`select * from booklist where id = ${id}`)).rows[0]
-// const title = bookData.title
-// const isbn = bookData.isbn
- const dateRead =await convertDateRead(bookData.date_read)
-// const recommendation = bookData.rating
-res.json([coverURL,bookData,dateRead])
+const bookData =(await db.query(`select bl.*from booklist bl where bl.id = ${id}`)).rows
+const isbn = bookData[0].isbn
+const notes = (await db.query("select * from notes where bookisbn = $1 ",[isbn])).rows
+// console.log(isbn,notes)
+
+ const dateRead =await convertDateRead(bookData[0].date_read)
+res.json([coverURL,bookData,notes,dateRead])
 })
 
 app.get("/books/editDetail/:id",async(req,res)=>{
@@ -114,7 +115,7 @@ app.get("/books/editDetail/:id",async(req,res)=>{
     res.json([book,dateRead])
 })
 
-app.patch("/saveData", async (req,res)=>{
+app.patch("/saveData/:id", async (req,res)=>{
     const id = req.params.id
     const book = (await db.query(`select * from booklist where id = ${id}`)).rows[0]
     const title = req.body.title || book.title
@@ -126,20 +127,95 @@ app.patch("/saveData", async (req,res)=>{
     const summary = req.body.summary || book.summary
 
     const query = 
-    "update booklist set title = $1, set isbn = $2,set author = $3, set date_read = $4, set rating = $5, set summary = $6" +
+    "update booklist set title = $1, isbn = $2,author = $3, date_read = $4, rating = $5,summary = $6" +
     " where id = $7"
     try {
         const insert =await db.query(query,[title,isbn,author,dateRead,rating,summary,id])
+        res.json("update successfull")
+    } catch (error) {
+        console.error(error.message)
+        
+    }
+})
+
+// add new note to db
+app.post("/addNote/:id",async (req,res)=>{
+    const id = req.params.id
+    const note = req.body.noteEntry
+    // reset noteid counter
+    const script =`
+    DO $$
+    DECLARE newNoteVal INT;
+    BEGIN
+    -- get count of existing records and add 1
+
+        select count(noteid) + 1 into newNoteVal from notes;
+
+        EXECUTE 'ALTER SEQUENCE notes_id_seq RESTART WITH ' || newNoteVal;
+
+    END $$;
+    `;
+    try {
+        // execute script
+        await db.query(script)
+        // 
+        const isbn =(await db.query(`select isbn from booklist where id = ${id}`)).rows[0]
+        const isbnVal = isbn.isbn
+        const insert = await db.query(`insert into notes (note, bookisbn) values($1,$2)`,
+    [note,isbnVal])
+    res.json("note added")
+
+    } catch (error) {
+        console.error(error.message)
+    }
+})
+
+// delete note based on the noteid
+app.post("/deleteNote/:noteid/:bookid",async (req,res)=>{
+    const noteid = req.params.noteid
+    const bookid = req.params.bookid
+   try {
+    const result = await db.query("delete from notes where noteid = $1",[noteid])
+    res.json("note deleted")
+   } catch (error) {
+    console.error(error.message)
+    
+   }
+})
+app.patch("/editNote/:noteid",async (req,res) =>{
+    const noteid = req.params.noteid
+    const bookid = req.params.bookid
+    const note = req.body.noteEntry
+    try {
+        const response = await db.query("update notes set note = $1 where noteid = $2",[note,noteid])
+        res.json("note edit complete")
+        
     } catch (error) {
         console.error(error.message)
         
     }
 
-
 })
 
+
+
+
+
 async function convertDateRead(date){
-    const dateConverted = date.toLocaleDateString() 
+    let d = new Date(date)
+    let month =''+ ( +d.getMonth()+1)
+    let day = ''+ d.getDate()
+    let year = d.getFullYear()
+
+    // month between 1 and 9
+    if (month.length <2){
+        month = '0' + month
+    }
+    if (day < 2){
+        day = '0' + day
+    }
+let dateConverted = [year,month,day].join('-')
+    // const dateConverted = date.toLocaleDateString()
     return dateConverted
 
 }

@@ -59,13 +59,15 @@ app.get("/books/:id", async (req,res) =>{
     const response = await axios.get(`${API_URL}/notes/${id}`)
     const bookData = response.data[1]
     const coverUrl = response.data[0]
-    const dateRead = response.data[2]
-    console.log( response.data[2])
+    const dateRead = response.data[3]
+    const notes = response.data[2]
+    // console.log( response.data[2])
 
     res.render("notes",{
         bookData: bookData,
         coverUrl: coverUrl,
-        dateRead:dateRead
+        dateRead:dateRead,
+        notes:notes
     })
 })
 // edit book data
@@ -86,14 +88,52 @@ res.render("bookEdit",{
 app.post("/editBookSubmit/:id",async(req,res)=>{
     const id = req.params.id
 const response = await axios.patch(`${API_URL}/saveData/${id}`,req.body)
-conasole.log(response.data)
+console.log(response.data)
 res.redirect("/")
 })
-  
+
+// add a new note to db
+app.post("/addNote/:id",async (req,res)=>{
+    const id = req.params.id
+    const response = await axios.post(`${API_URL}/addNote/${id}`,req.body)
+    console.log(response.data)
+    res.redirect(`/books/${id}`)
+})
+// delete note based on the noteid
+app.post("/deleteNote/:noteid/:bookid", async (req,res) =>{
+    console.log(req.params)
+    const noteid = req.params.noteid
+    const bookid = req.params.bookid
+    const response = await axios.post(`${API_URL}/deleteNote/${noteid}/${bookid}`)
+    
+    res.redirect(`/books/${bookid}`)
+})
+
+  app.post("/editNote/:noteid/:bookid",async(req,res) =>{
+    const noteid = req.params.noteid
+    const bookid = req.params.bookid
+    console.log(req.body)
+    const response = await axios.patch(`${API_URL}/editNote/${noteid}`,req.body)
+    console.log(response.data)
+    res.redirect(`/books/${bookid}`)
+  })
 
 
 async function convertDateRead(date){
-    const dateConverted = date.toLocaleDateString() 
+    const d = new Date(date)
+    const month = (d.getMonth()+1)
+    const day = d.getDate()
+    const year = d.getFullYear()
+
+    // month between 1 and 9
+    if (month.length <2){
+        month = '0' + month
+    }
+    if (day < 2){
+        day = '0' + day
+    }
+const dateConverted = [year,month,day].join('-')
+    // const dateConverted = date.toLocaleDateString() 
     return dateConverted
 
 }

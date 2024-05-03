@@ -23,7 +23,7 @@
                 <img class="bookImg" src="<%= coverURLs[book.id-1] %>" alt="">
             </div>
             <div class="col-md-6 sm-6 lg-9" id="bookData">
-                <h3 id="booktitle" ><%=book.title %></h3>
+                <h3 id="booktitle" ><%=book.title %> by <%= book.author %></h3>
                 <p class="small">Date Read: <%= dateRead[book.id-1] %><span id="rating"> Recommendation: <%= book.rating %>\10</span></p>
                 <p>
                     <%= book.summary%>
@@ -47,6 +47,3 @@
 
 
 
-
-</body>
-</html>
