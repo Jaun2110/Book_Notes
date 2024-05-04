@@ -254,6 +254,6 @@ async function fetchCover(bookId){
 
 
 
-app.listen(port,()=>{
+app.listen(process.env.PORT||port,()=>{
 console.log(`API running on http://localhost:${port}`)
 })
